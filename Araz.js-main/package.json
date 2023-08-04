@@ -1,0 +1,14 @@
+{
+  "name": "dom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel public/index.html"
+  },
+  "keywords": [],
+  "author": "Amir Maghami",
+  "license": "ISC",
+  "devDependencies": {
+  }
+}

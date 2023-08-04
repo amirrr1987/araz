@@ -1,0 +1,17 @@
+.navbar{
+    background-color: #FFF;
+    &__nav{
+        display: flex;
+        justify-content: space-around;
+    }
+    &__item{
+        display: flex;
+    
+    }
+    &__link{
+        background-color: #FFF;
+        padding: 1rem 5rem;
+        border-radius: 0 0 1rem 1rem ;
+    }
+    
+}
