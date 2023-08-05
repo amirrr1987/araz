@@ -1,0 +1,25 @@
+{
+  "name": "araz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirrr1987/araz.git"
+  },
+  "keywords": [],
+  "author": {
+    "email": "maghami.a1987@gmail.com",
+    "name": "Amir Maghami",
+    "url": "http://amirmaghami.ir/"
+  },
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amirrr1987/araz/issues"
+  },
+  "homepage": "https://github.com/amirrr1987/araz#readme"
+}
