@@ -17,4 +17,4 @@ jobs:
       - run: yarn install
       - run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.Vue_Cute_Button}}
+          NODE_AUTH_TOKEN: ${{secrets.Vue_Cuted_Button}}
