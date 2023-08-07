@@ -29,18 +29,28 @@ const addChildren = (element: HTMLElement, children: Node | string | (Node | str
   }
 };
 
-const createElement = <P extends { [key: string]: any }>({
+const h = <P extends { [key: string]: any }>({
   name,
   props = {} as P,
   children = null,
+  setup,
+  onMounted,
 }: Element<P>): HTMLElement => {
   const element: HTMLElement = document.createElement(name);
 
   addAttributes(element, props);
 
   addChildren(element, children);
+  if (setup) {
+    setup(element); // Call the setup function with the created element
+  }
 
+  if (onMounted) {
+    element.addEventListener('DOMContentLoaded', () => {
+      onMounted(element); // Call the onMounted function when the element is mounted
+    });
+  }
   return element;
 };
 
-export default createElement;
+export default h;
