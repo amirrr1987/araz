@@ -42,12 +42,12 @@ const h = <P extends { [key: string]: any }>({
 
   addChildren(element, children);
   if (setup) {
-    setup(element); // Call the setup function with the created element
+    setup(element);
   }
 
   if (onMounted) {
     element.addEventListener('DOMContentLoaded', () => {
-      onMounted(element); // Call the onMounted function when the element is mounted
+      onMounted(element);
     });
   }
   return element;
