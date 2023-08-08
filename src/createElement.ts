@@ -1,53 +1,93 @@
 import { Element } from './types';
 
-const addAttributes = <P extends { [key: string]: any }>(element: HTMLElement, props: P) => {
-  for (const prop in props) {
-    if (prop.startsWith('on')) {
-      const eventName = prop.substring(2).toLowerCase();
-      element.addEventListener(eventName, props[prop]);
+import { forEach, isArray, startsWith, toLower } from "lodash-es";
+
+
+
+const addEventAttribute = (
+  element: HTMLElement,
+  attributeName: string,
+  attributeValue: any
+) => {
+  const eventName = toLower(attributeName.substring(2));
+  element.addEventListener(eventName, attributeValue);
+};
+
+const addRegularAttribute = (
+  element: HTMLElement,
+  attributeName: string,
+  attributeValue: any
+) => {
+  element.setAttribute(attributeName, attributeValue);
+};
+
+const addAttributes = <P extends { [key: string]: any }>(
+  element: HTMLElement,
+  props: P
+) => {
+  forEach(props, (value, prop) => {
+    if (startsWith(prop, "on")) {
+      addEventAttribute(element, prop, value);
     } else {
-      element.setAttribute(prop, props[prop]);
+      addRegularAttribute(element, prop, value);
     }
+  });
+};
+
+const appendNode = (parent: HTMLElement, node: Node) => {
+  parent.appendChild(node);
+};
+
+const appendText = (parent: HTMLElement, text: string) => {
+  parent.appendChild(document.createTextNode(text));
+};
+
+
+const addChildren = (
+  element: HTMLElement,
+  children: Node | string | (Node | string)[] | null
+) => {
+  if (children !== null && children !== undefined) {
+    const childArray = isArray(children) ? children : [children];
+    forEach(childArray, (child) => {
+      if (child instanceof Node) {
+        appendNode(element, child);
+      } else {
+        appendText(element, children.toString());
+      }
+    });
   }
 };
 
-const addChildren = (element: HTMLElement, children: Node | string | (Node | string)[] | null) => {
-  if (children !== null && children !== undefined) {
-    if (Array.isArray(children)) {
-      children.forEach((child) => {
-        if (child instanceof Node) {
-          element.appendChild(child);
-        } else {
-          element.appendChild(document.createTextNode(child.toString()));
-        }
-      });
-    } else if (children instanceof Node) {
-      element.appendChild(children);
-    } else {
-      element.appendChild(document.createTextNode(children.toString()));
-    }
-  }
-};
 
 const h = <P extends { [key: string]: any }>({
   name,
   props = {} as P,
   children = null,
   setup,
-  onMounted,
 }: Element<P>): HTMLElement => {
   const element: HTMLElement = document.createElement(name);
 
   addAttributes(element, props);
 
   addChildren(element, children);
-  if (setup) {
-    setup(element);
-  }
 
-  if (onMounted) {
-    element.addEventListener('DOMContentLoaded', () => {
-      onMounted(element);
+  const beforeOnMounted = (callback: () => void) => {
+    window.addEventListener("DOMContentLoaded", () => {
+      callback();
+    });
+  };
+
+  const onMounted = (callback: () => void) => {
+    window.addEventListener("load", () => {
+      callback();
+    });
+  };
+
+  if (setup) {
+    setup({
+      beforeOnMounted,
+      onMounted,
     });
   }
   return element;
