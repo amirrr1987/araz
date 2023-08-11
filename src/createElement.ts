@@ -1,96 +1,86 @@
-import { Element } from './types';
+import { EventHandler ,Children, ElementAttributes ,ElementCreator } from './types';
+import { forEach, isFunction, map, isString, isElement, includes, entries, camelCase, debounce, pickBy, isEmpty } from 'lodash-es';
 
-import { forEach, isArray, startsWith, toLower } from "lodash-es";
-
-
-
-const addEventAttribute = (
-  element: HTMLElement,
-  attributeName: string,
-  attributeValue: any
-) => {
-  const eventName = toLower(attributeName.substring(2));
-  element.addEventListener(eventName, attributeValue);
+export const onBeforeMount = (callback: () => void) => {
+    const debouncedCallback = debounce(callback, 300);
+    window.addEventListener("load", debouncedCallback);
 };
 
-const addRegularAttribute = (
-  element: HTMLElement,
-  attributeName: string,
-  attributeValue: any
-) => {
-  element.setAttribute(attributeName, attributeValue);
+export const onMounted = (callback: () => void) => {
+    const debouncedCallback = debounce(callback, 300);
+    window.addEventListener("DOMContentLoaded", debouncedCallback);
 };
 
-const addAttributes = <P extends { [key: string]: any }>(
-  element: HTMLElement,
-  props: P
-) => {
-  forEach(props, (value, prop) => {
-    if (startsWith(prop, "on")) {
-      addEventAttribute(element, prop, value);
-    } else {
-      addRegularAttribute(element, prop, value);
+export const onUpdated = (callback: () => void) => {
+    const debouncedCallback = debounce(callback, 300);
+    document.addEventListener("DOMContentLoaded", debouncedCallback);
+};
+
+export const onDestroy = (callback: () => void) => {
+    window.addEventListener("unload", callback);
+};
+
+
+
+if (document.readyState == 'loading') {
+    console.log(document.readyState);
+}
+
+
+
+
+const applyStyles = (element: HTMLElement, styles: { [key: string]: string }): void => {
+    map(styles, (value, key) => {
+        element.style.setProperty(key, value);
+    });
+};
+
+const addClasses = (element: HTMLElement, classList: string[]): void => {
+    forEach(classList, className => {
+        if (!includes(element.classList, className)) {
+            element.classList.add(className);
+        }
+    });
+}
+const addEventListeners = (element: HTMLElement, events: { [key: string]: EventHandler }): void => {
+    forEach(entries(events), ([eventName, eventHandler]) => {
+        const formattedEventName = camelCase(eventName.slice(2));
+        if (isFunction(eventHandler)) {
+            element.addEventListener(formattedEventName, eventHandler);
+        }
+    });
+};
+
+const appendChildren = (element: HTMLElement, children: Children): void => {
+    forEach(children, child => {
+        if (isString(child)) {
+            element.appendChild(document.createTextNode(child));
+        } else if (isElement(child)) {
+            element.appendChild(child);
+        }
+    });
+};
+
+export const r = ({ tag, attrs, children }: ElementCreator): HTMLElement => {
+    const element = document.createElement(tag);
+
+    const validStyles = pickBy(attrs.style, isString);
+
+    if (!isEmpty(validStyles)) {
+        applyStyles(element, validStyles);
     }
-  });
+
+    if (attrs.classList && attrs.classList.length > 0) {
+        addClasses(element, attrs.classList);
+    }
+
+    if (attrs) {
+        addEventListeners(element, attrs);
+    }
+
+    if (children) {
+        appendChildren(element, children);
+    }
+
+    return element;
 };
-
-const appendNode = (parent: HTMLElement, node: Node) => {
-  parent.appendChild(node);
-};
-
-const appendText = (parent: HTMLElement, text: string) => {
-  parent.appendChild(document.createTextNode(text));
-};
-
-
-const addChildren = (
-  element: HTMLElement,
-  children: Node | string | (Node | string)[] | null
-) => {
-  if (children !== null && children !== undefined) {
-    const childArray = isArray(children) ? children : [children];
-    forEach(childArray, (child) => {
-      if (child instanceof Node) {
-        appendNode(element, child);
-      } else {
-        appendText(element, children.toString());
-      }
-    });
-  }
-};
-
-
-const h = <P extends { [key: string]: any }>({
-  name,
-  props = {} as P,
-  children = null,
-  setup,
-}: Element<P>): HTMLElement => {
-  const element: HTMLElement = document.createElement(name);
-
-  addAttributes(element, props);
-
-  addChildren(element, children);
-
-  const beforeOnMounted = (callback: () => void) => {
-    window.addEventListener("DOMContentLoaded", () => {
-      callback();
-    });
-  };
-
-  const onMounted = (callback: () => void) => {
-    window.addEventListener("load", () => {
-      callback();
-    });
-  };
-
-  if (setup) {
-    setup({
-      beforeOnMounted,
-      onMounted,
-    });
-  }
-  return element;
-};
-
-export default h;

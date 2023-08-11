@@ -1,9 +1,16 @@
 // types.ts
-type Setup = ({ beforeOnMounted, onMounted }: { beforeOnMounted?: any; onMounted?: any }) => void;
+export type ElementAttributes = {
+  style: Partial<CSSStyleDeclaration>;
+  classList?: string[];
+  [key: string]: any;
+};
 
-export interface Element<P extends { [key: string]: any } = {}> {
-  name: string;
-  props?: P;
-  children?: Node | string | (Node | string)[] | null;
-  setup?: Setup;
-}
+export  type EventHandler = (event: Event) => void;
+
+export type Children = Array<string | Element>;
+
+export type ElementCreator = {
+  tag: string;
+  attrs: ElementAttributes;
+  children: Children;
+};
