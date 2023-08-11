@@ -1,4 +1,4 @@
-import h from "./src/createElement"
+import { r ,onBeforeMount ,onDestroy ,onMounted ,onUpdated } from "./src/createElement"
 
 
-export { h }
+export { r ,onBeforeMount ,onDestroy ,onMounted ,onUpdated }
