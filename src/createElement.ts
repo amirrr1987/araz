@@ -1,4 +1,4 @@
-import { EventHandler ,Children, ElementAttributes ,ElementCreator } from './types';
+import { EventHandler ,Children, ElementCreator } from './types';
 import { forEach, isFunction, map, isString, isElement, includes, entries, camelCase, debounce, pickBy, isEmpty } from 'lodash-es';
 
 export const onBeforeMount = (callback: () => void) => {

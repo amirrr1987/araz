@@ -1,6 +1,6 @@
 // types.ts
 export type ElementAttributes = {
-  style: Partial<CSSStyleDeclaration>;
+  style?: Partial<CSSStyleDeclaration>;
   classList?: string[];
   [key: string]: any;
 };
