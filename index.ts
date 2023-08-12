@@ -1,4 +1,4 @@
-import { r ,onBeforeMount ,onDestroy ,onMounted ,onUpdated } from "./src/createElement"
+import { render ,onBeforeMount ,onDestroy ,onMounted } from "./src/createElement"
 
 
-export { r ,onBeforeMount ,onDestroy ,onMounted ,onUpdated }
+export { render ,onBeforeMount ,onDestroy ,onMounted  }
