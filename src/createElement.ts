@@ -1,5 +1,5 @@
 import { EventHandler ,Children, ElementCreator } from './types';
-import { forEach, isFunction, map, isString, isElement, includes, entries, camelCase, debounce, pickBy, isEmpty } from 'lodash-es';
+import { forEach, isFunction, isString, isElement, includes, entries, camelCase, debounce, assign } from 'lodash-es';
 
 export const onBeforeMount = (callback: () => void) => {
     const debouncedCallback = debounce(callback, 300);
@@ -9,11 +9,6 @@ export const onBeforeMount = (callback: () => void) => {
 export const onMounted = (callback: () => void) => {
     const debouncedCallback = debounce(callback, 300);
     window.addEventListener("DOMContentLoaded", debouncedCallback);
-};
-
-export const onUpdated = (callback: () => void) => {
-    const debouncedCallback = debounce(callback, 300);
-    document.addEventListener("DOMContentLoaded", debouncedCallback);
 };
 
 export const onDestroy = (callback: () => void) => {
@@ -29,10 +24,9 @@ if (document.readyState == 'loading') {
 
 
 
-const applyStyles = (element: HTMLElement, styles: { [key: string]: string }): void => {
-    map(styles, (value, key) => {
-        element.style.setProperty(key, value);
-    });
+const applyStyles = (element: HTMLElement, styles: CSSStyleDeclaration): void => {
+    const style = element.style as CSSStyleDeclaration;
+    assign(style, styles)
 };
 
 const addClasses = (element: HTMLElement, classList: string[]): void => {
@@ -61,16 +55,17 @@ const appendChildren = (element: HTMLElement, children: Children): void => {
     });
 };
 
+
 export const r = ({ tag, attrs, children }: ElementCreator): HTMLElement => {
+   
     const element = document.createElement(tag);
+ 
 
-    const validStyles = pickBy(attrs.style, isString);
-
-    if (!isEmpty(validStyles)) {
-        applyStyles(element, validStyles);
+    if (attrs?.style) {
+        applyStyles(element, <CSSStyleDeclaration>attrs?.style);
     }
 
-    if (attrs.classList && attrs.classList.length > 0) {
+    if (attrs?.classList) {
         addClasses(element, attrs.classList);
     }
 
