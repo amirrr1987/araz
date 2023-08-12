@@ -11,6 +11,6 @@ export type Children = Array<string | Element>;
 
 export type ElementCreator = {
   tag: string;
-  attrs: ElementAttributes;
-  children: Children;
+  attrs?: ElementAttributes;
+  children?: Children;
 };
