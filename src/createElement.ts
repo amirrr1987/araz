@@ -1,5 +1,6 @@
 // createElement.ts
 import { EventHandler, Children, ElementCreator } from "./types";
+export { HTML } from "./types";
 import {
   forEach,
   isFunction,
@@ -13,13 +14,21 @@ import {
 } from "lodash-es";
 
 export const onBeforeMount = (callback: () => void) => {
-  const debouncedCallback = debounce(callback, 300);
-  window.addEventListener("load", debouncedCallback);
+  const debouncedCallback = () => {
+    if (document.readyState === "loading") {
+      debounce(callback, 300);
+    }
+  };
+  document.addEventListener("readystatechange", debouncedCallback);
 };
 
 export const onMounted = (callback: () => void) => {
-  const debouncedCallback = debounce(callback, 300);
-  window.addEventListener("DOMContentLoaded", debouncedCallback);
+  if (document.readyState === "loading") {
+    const debouncedCallback = debounce(callback, 300);
+    document.addEventListener("DOMContentLoaded", debouncedCallback);
+  } else {
+    callback();
+  }
 };
 
 export const onDestroy = (callback: () => void) => {
@@ -83,8 +92,8 @@ export const render = ({
     addClassList(element, attrs.classList);
   }
 
-  if (attrs) {
-    addEventListeners(element, attrs);
+  if (attrs?.events) {
+    addEventListeners(element, attrs.events);
   }
 
   if (children) {

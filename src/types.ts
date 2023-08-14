@@ -1,11 +1,13 @@
 // types.ts
+export  type EventHandler = (event: Event) => void;
+
 export type ElementAttributes = {
   style?: Partial<CSSStyleDeclaration>;
   classList?: string[];
+  events?: Partial<GlobalEventHandlers>
   [key: string]: any;
 };
 
-export  type EventHandler = (event: Event) => void;
 
 export type Children = Array<string | Element>;
 export enum HTML {
