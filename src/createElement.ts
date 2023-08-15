@@ -1,5 +1,5 @@
 // createElement.ts
-import { EventHandler, Children, ElementCreator } from "./types";
+import { EventHandler, Children, ElementCreator, StateUpdater } from "./types";
 export { HTML } from "./types";
 import {
   forEach,
@@ -13,31 +13,27 @@ import {
   assign,
 } from "lodash-es";
 
-export const onBeforeMount = (callback: () => void) => {
-  const debouncedCallback = () => {
-    if (document.readyState === "loading") {
-      debounce(callback, 300);
-    }
-  };
-  document.addEventListener("readystatechange", debouncedCallback);
-};
-
-export const onMounted = (callback: () => void) => {
-  if (document.readyState === "loading") {
-    const debouncedCallback = debounce(callback, 300);
-    document.addEventListener("DOMContentLoaded", debouncedCallback);
-  } else {
+export const onMounted = (callback: () => void): void => {
+  if (document.readyState === "complete" || document.readyState === "interactive") {
     callback();
+  } else {
+    document.addEventListener("DOMContentLoaded", callback);
   }
 };
 
-export const onDestroy = (callback: () => void) => {
-  window.addEventListener("unload", callback);
+
+export const useState = <T>(initialValue: T): [T, StateUpdater<T>] => {
+  let state: T = initialValue;
+  const listeners: Array<StateUpdater<T>> = [];
+
+  const setState = (newValue: T): void => {
+    state = newValue;
+    forEach(listeners, listener => listener(state));
+  };
+
+  return [state, setState];
 };
 
-if (document.readyState == "loading") {
-  console.log(document.readyState);
-}
 
 const applyStyles = (
   element: HTMLElement,

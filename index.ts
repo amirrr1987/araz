@@ -1,4 +1,4 @@
-import { render ,onBeforeMount ,onDestroy ,onMounted, HTML } from "./src/createElement"
+import { render, useState ,onMounted, HTML } from "./src/createElement"
 
 
-export { render ,onBeforeMount ,onDestroy ,onMounted, HTML  }
+export { render ,useState ,onMounted, HTML  }

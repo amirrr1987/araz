@@ -1,10 +1,17 @@
 // types.ts
-export  type EventHandler = (event: Event) => void;
+type EventHandler = (event: Event) => void;
+
+export interface CustomGlobalEventHandlers extends GlobalEventHandlers {
+  onabort: EventHandler;
+}
+
+
+export type StateUpdater<T> = (newValue: T) => void;
 
 export type ElementAttributes = {
   style?: Partial<CSSStyleDeclaration>;
   classList?: string[];
-  events?: Partial<GlobalEventHandlers>
+  events?: Partial<CustomGlobalEventHandlers>
   [key: string]: any;
 };
 
