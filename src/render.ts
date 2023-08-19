@@ -22,7 +22,7 @@ export const createNode = async ({
     
     if (isEqual(key,"style") && isObject(value)) {
       const result = map(entries(value),([property, propertyValue]) => `${kebabCase(property)}:${propertyValue}`);
-      const styleString = join(result, ";");
+      const styleString = join(result, "; ");
       $el.setAttribute("style", styleString);
     } 
     
