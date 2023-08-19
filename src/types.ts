@@ -18,13 +18,13 @@ export interface Mount {
 
 export type EventHandler = (event: Event) => void;
 
-export interface CustomGlobalEventHandlers extends GlobalEventHandlers {
+export interface EventHandlers extends GlobalEventHandlers {
     onabort: EventHandler;
 }
 
 interface Attrs {
     style?: Partial<CSSStyleDeclaration> | string;
-    events?: Partial<CustomGlobalEventHandlers>;
+    events?: Partial<EventHandlers>;
     [key: string]: string | number | boolean | Partial<CSSStyleDeclaration> | undefined;
 }
 
