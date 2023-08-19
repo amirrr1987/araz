@@ -1,4 +1,5 @@
 import { isArray } from "lodash-es";
+import { HTMLTags } from "./types";
 import { el } from "./element";
 
 interface Props {
@@ -21,7 +22,7 @@ export const RouterLink = (props: Props) => {
 };
 
 
-export const RouterView  = (props: HTML)=>{
+export const RouterView  = (props: HTMLTags)=>{
   
     return el({
         $tag: props ?? 'div',

@@ -1,4 +1,4 @@
-type HTMLTags = 'a' | 'abbr' | 'address' | 'area' | 'article' | 'aside' | 'audio' | 'b' |
+export type HTMLTags = 'a' | 'abbr' | 'address' | 'area' | 'article' | 'aside' | 'audio' | 'b' |
     'base' | 'bdi' | 'bdo' | 'blockquote' | 'body' | 'br' | 'button' | 'canvas' | 'caption' |
     'cite' | 'code' | 'col' | 'colgroup' | 'data' | 'datalist' | 'dd' | 'del' | 'details' |
     'dfn' | 'dialog' | 'div' | 'dl' | 'dt' | 'em' | 'embed' | 'fieldset' | 'figcaption' |
@@ -11,6 +11,10 @@ type HTMLTags = 'a' | 'abbr' | 'address' | 'area' | 'article' | 'aside' | 'audio
     'tbody' | 'td' | 'template' | 'textarea' | 'tfoot' | 'th' | 'thead' | 'time' | 'title' |
     'tr' | 'track' | 'u' | 'ul' | 'var' | 'video' | 'wbr';
 
+export interface Mount {
+    $node: HTMLElement,
+    $target: HTMLElement
+}
 
 export type EventHandler = (event: Event) => void;
 
