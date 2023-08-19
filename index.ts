@@ -1,5 +1,4 @@
-import { HTML } from "./src/types";
-import { render, useState } from "./src/createElement"
+import { el } from "./src/element"
 import { RouterView ,RouterLink,createRouter } from "./src/router"
 
-export { render ,useState, HTML, RouterLink, RouterView, createRouter  }
+export { el, RouterLink, RouterView, createRouter  }

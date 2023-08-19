@@ -1,6 +1,5 @@
 import { isArray } from "lodash-es";
-import { render } from "./createElement";
-import { HTML } from "./types";
+import { el } from "./element";
 
 interface Props {
   link: string;
@@ -10,24 +9,24 @@ interface Props {
 export const RouterLink = (props: Props) => {
   const active = props.link === window.location.pathname;
 
-  return render({
-    tag: HTML.Anchor,
-    attrs: {
+  return el({
+    $tag: 'a',
+    $attrs: {
       href: `${props.link}`,
-      classList: active ? ['active'] : [],
+      class: `${active ? ['active'] : ''}`,
       ['data-link']: '',
     },
-    children: [props.name],
+    $children: [props.name],
   });
 };
 
 
 export const RouterView  = (props: HTML)=>{
   
-    return render({
-        tag: props ?? HTML.Div,
-        attrs:{
-            classList:['router-view']
+    return el({
+        $tag: props ?? 'div',
+        $attrs:{
+            class:'router-view'
         }
     })
 }
