@@ -1,6 +1,5 @@
 // createElement.ts
-import { EventHandler, Children, ElementCreator, StateUpdater } from "./types";
-export { HTML } from "./types";
+import { Children, ElementCreator, StateUpdater,EventHandler } from "./types";
 import {
   forEach,
   isFunction,
@@ -9,18 +8,22 @@ import {
   includes,
   entries,
   camelCase,
-  debounce,
   assign,
+  startsWith,
+  mapKeys,
+  pickBy,
+  indexOf,
 } from "lodash-es";
 
 export const onMounted = (callback: () => void): void => {
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-    callback();
+  if (document.readyState === "loading") {
+    document.addEventListener("load", () => {
+      callback();
+    });
   } else {
-    document.addEventListener("DOMContentLoaded", callback);
+    callback();
   }
 };
-
 
 export const useState = <T>(initialValue: T): [T, StateUpdater<T>] => {
   let state: T = initialValue;
@@ -28,19 +31,17 @@ export const useState = <T>(initialValue: T): [T, StateUpdater<T>] => {
 
   const setState = (newValue: T): void => {
     state = newValue;
-    forEach(listeners, listener => listener(state));
+    forEach(listeners, (listener) => listener(state));
   };
 
   return [state, setState];
 };
 
-
 const applyStyles = (
   element: HTMLElement,
   styles: CSSStyleDeclaration
 ): void => {
-  const style = element.style as CSSStyleDeclaration;
-  assign(style, styles);
+  assign(element.style, styles);
 };
 
 const addClassList = (element: HTMLElement, classList: string[]): void => {
@@ -73,6 +74,30 @@ const appendChildren = (element: HTMLElement, children: Children): void => {
   });
 };
 
+const addAttrs = (
+  element: HTMLElement,
+  attrs: { [key: string]: string } | undefined
+): void => {
+  const validAttrNames = ["classList", "style"];
+
+  const transformedAttrs = mapKeys(attrs, (value, key) => {
+    if (startsWith(key, "data-")) {
+      const dataAttributeName = key.replace("data-", "");
+      element.dataset[dataAttributeName] = value || "";
+      return null;
+    }
+    return key;
+  });
+
+  const filteredAttrs = pickBy(transformedAttrs, (_value, key) =>
+    indexOf(validAttrNames, key) === -1
+  );
+
+  forEach(filteredAttrs, (attrValue, attrName) => {
+    element.setAttribute(attrName, attrValue || "");
+  });
+};
+
 export const render = ({
   tag,
   attrs,
@@ -80,20 +105,26 @@ export const render = ({
 }: ElementCreator): HTMLElement => {
   const element = document.createElement(tag);
 
-  if (attrs?.style) {
-    applyStyles(element, <CSSStyleDeclaration>attrs?.style);
-  }
-
-  if (attrs?.classList) {
-    addClassList(element, attrs.classList);
-  }
-
-  if (attrs?.events) {
-    addEventListeners(element, attrs.events);
-  }
-
   if (children) {
     appendChildren(element, children);
+  }
+  if (attrs) {
+    if (attrs.style) {
+      applyStyles(element, <CSSStyleDeclaration>attrs.style);
+    }
+
+    if (attrs.classList) {
+      addClassList(element, attrs.classList);
+    }
+
+    if (attrs.events) {
+      addEventListeners(element, attrs.events);
+    }
+    if (attrs.id) {
+      element.id = attrs.id;
+    } else {
+      addAttrs(element, attrs);
+    }
   }
 
   return element;
