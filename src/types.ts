@@ -31,5 +31,5 @@ interface Attrs {
 export interface VNode {
     $tag: HTMLTags;
     $attrs?: Attrs;
-    $children?: (VNode | string)[];
+    $children?: any;
 }

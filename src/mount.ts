@@ -1,6 +1,6 @@
 import { Mount } from "./types";
 
 export const mount = ({$node, $target}: Mount): HTMLElement => {
-    $target.replaceWith($node);
+    $target.append($node);
     return $node;
 };

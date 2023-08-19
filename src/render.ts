@@ -6,6 +6,7 @@ import {
   isObject,
   isString,
   join,
+  kebabCase,
   map,
 } from "lodash-es";
 import { VNode } from "./types";
@@ -18,11 +19,14 @@ export const createNode = async ({
   const $el = document.createElement($tag);
 
   for await (const [key, value] of entries($attrs)) {
+    
     if (isEqual(key,"style") && isObject(value)) {
-      const result = map(entries(value),([property, propertyValue]) => `${property}:${propertyValue}`);
+      const result = map(entries(value),([property, propertyValue]) => `${kebabCase(property)}:${propertyValue}`);
       const styleString = join(result, ";");
       $el.setAttribute("style", styleString);
-    } else if (isEqual(key,"events") && isObject(value)) {
+    } 
+    
+    else if (isEqual(key,"events") && isObject(value)) {
       for (const [eventName, eventHandler] of entries(value)) {
         const formattedEventName = camelCase(eventName.slice(2));
         if (isFunction(eventHandler)) {
@@ -32,9 +36,12 @@ export const createNode = async ({
           );
         }
       }
-    } else {
+    } 
+    
+    else {
       $el.setAttribute(key, isString(value) ? value.toString() : "");
     }
+
   }
 
   for await (const child of $children) {
