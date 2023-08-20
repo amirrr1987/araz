@@ -1,6 +1,7 @@
 import {
   camelCase,
   entries,
+  isArray,
   isEqual,
   isFunction,
   isObject,
@@ -8,10 +9,11 @@ import {
   join,
   kebabCase,
   map,
+  trim
 } from "lodash-es";
 import { VNode } from "./types";
 
-export const createNode = async ({
+export const render = async ({
   $tag,
   $attrs = {},
   $children = [],
@@ -19,14 +21,14 @@ export const createNode = async ({
   const $el = document.createElement($tag);
 
   for await (const [key, value] of entries($attrs)) {
-    
-    if (isEqual(key,"style") && isObject(value)) {
-      const result = map(entries(value),([property, propertyValue]) => `${kebabCase(property)}:${propertyValue}`);
+
+    if (isEqual(key, "style") && isObject(value)) {
+      const result = map(entries(value), ([property, propertyValue]) => `${kebabCase(property)}:${propertyValue}`);
       const styleString = join(result, "; ");
       $el.setAttribute("style", styleString);
-    } 
-    
-    else if (isEqual(key,"events") && isObject(value)) {
+    }
+
+    else if (isEqual(key, "events") && isObject(value)) {
       for (const [eventName, eventHandler] of entries(value)) {
         const formattedEventName = camelCase(eventName.slice(2));
         if (isFunction(eventHandler)) {
@@ -36,7 +38,7 @@ export const createNode = async ({
           );
         }
       }
-    } 
+    }
     
     else {
       $el.setAttribute(key, isString(value) ? value.toString() : "");
@@ -48,15 +50,10 @@ export const createNode = async ({
     if (isString(child)) {
       $el.appendChild(document.createTextNode(child));
     } else {
-      const $child = await createNode(child);
+      const $child = await render(child);
       $el.appendChild($child);
     }
   }
 
-  return $el;
-};
-
-export const render = (vNode: VNode): Promise<HTMLElement> => {
-  const $el = createNode(vNode);
   return $el;
 };
