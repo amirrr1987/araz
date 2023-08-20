@@ -16,13 +16,11 @@ export interface Mount {
     $target: HTMLElement
 }
 
-export type EventHandler = (event: Event) => void;
-
-
 interface Attrs {
     style?: Partial<CSSStyleDeclaration> | string;
+    class?: string | string[];
     events?: Partial<GlobalEventHandlers>;
-    [key: string]: string | number | boolean | Partial<CSSStyleDeclaration> | undefined;
+    [key: string]: string | number | boolean | Partial<CSSStyleDeclaration>| string[] | undefined;
 }
 
 export interface VNode {

@@ -27,6 +27,10 @@ export const render = async ({
       const styleString = join(result, "; ");
       $el.setAttribute("style", styleString);
     }
+    else if (isEqual(key, "class") && isArray(value)) {
+      const classList = value.join(" ");
+      $el.setAttribute("class", trim(classList));
+    }
 
     else if (isEqual(key, "events") && isObject(value)) {
       for (const [eventName, eventHandler] of entries(value)) {
