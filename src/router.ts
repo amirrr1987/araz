@@ -1,6 +1,7 @@
 import { isArray } from "lodash-es";
 import { HTMLTags } from "./types";
 import { el } from "./element";
+import { render } from "./render";
 
 interface Props {
   link: string;
@@ -43,11 +44,11 @@ export const createRouter = ({ routes}: {routes: any})=>{
   window.addEventListener("load", () => {
     document.body.addEventListener("click", (e: MouseEvent) => {
       const target = e.target;
-  
+      
       if (
         target instanceof HTMLAnchorElement &&
         target.hasAttribute("data-link")
-      ) {
+        ) {
         e.preventDefault();
         navigateTo(target.href);
       }
@@ -56,7 +57,7 @@ export const createRouter = ({ routes}: {routes: any})=>{
   });
 
   let componentMaker: any = async (component: any) => {
-    const result = await component();
+    const result = await component;
     
     if (isArray(result)) {
       return Promise.all(result);
@@ -85,24 +86,10 @@ export const createRouter = ({ routes}: {routes: any})=>{
         route: routes[routes.length - 1],
       };
     }
-
     const component = await componentMaker(match.route.component);
-
     routerView = document.querySelector(".router-view");
-  
-    while (routerView?.firstChild) {
-      routerView.removeChild(routerView.firstChild);
-    }
-  
-    if (isArray(component)) {
-      for (const comp of component) {
-        if (comp instanceof Node) {  
-          routerView?.appendChild(comp);
-        }
-      }
-    } else if (component instanceof Node) {  
-      routerView?.appendChild(component);
-    }
+    routerView.innerHTML = '';
+    routerView.appendChild(await render(component))
   };
 }
 export { routerView };
