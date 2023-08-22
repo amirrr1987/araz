@@ -1,4 +1,4 @@
-import { isArray } from "lodash-es";
+import { isArray, replace } from "lodash-es";
 import { HTMLTags } from "./types";
 import { el } from "./element";
 import { render } from "./render";
@@ -87,9 +87,13 @@ export const createRouter = ({ routes}: {routes: any})=>{
       };
     }
     const component = await componentMaker(match.route.component);
+    console.log(component);
+    
     routerView = document.querySelector(".router-view");
     routerView.innerHTML = '';
-    routerView.appendChild(await render(component))
+    // routerView.appendChild(await render(component));
+    // routerView.repalcewidh();
+    routerView.replaceWidth(await render(component));
   };
 }
 export { routerView };
