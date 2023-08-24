@@ -80,17 +80,13 @@ export const createRouter = ({ routes }: { routes: any }) => {
         route: routes[routes.length - 1],
       };
     }
-    console.log(match.route.component);
-    
+
     const node = await componentMaker(match.route.component());
-    console.log(node);
-    
-    const component = await render(node)
-    console.log(component);
-    
+
+    const component = await render(node);
+
     routerView = document.querySelector(".router-view");
-    console.log(routerView);
-    
+
     if (!isNull(routerView)) {
       routerView.innerHTML = "";
       routerView.appendChild(component);

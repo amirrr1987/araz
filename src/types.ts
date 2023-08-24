@@ -12,7 +12,7 @@ export type HTMLTags = 'a' | 'abbr' | 'address' | 'area' | 'article' | 'aside' |
     'tr' | 'track' | 'u' | 'ul' | 'var' | 'video' | 'wbr';
 
 export interface Mount {
-    $node: HTMLElement,
+    $node: DocumentFragment | HTMLElement,
     $target: HTMLElement
 }
 
