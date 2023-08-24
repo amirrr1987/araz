@@ -80,12 +80,20 @@ export const createRouter = ({ routes }: { routes: any }) => {
         route: routes[routes.length - 1],
       };
     }
-    const component = await componentMaker(match.route.component);
-
+    console.log(match.route.component);
+    
+    const node = await componentMaker(match.route.component());
+    console.log(node);
+    
+    const component = await render(node)
+    console.log(component);
+    
     routerView = document.querySelector(".router-view");
+    console.log(routerView);
+    
     if (!isNull(routerView)) {
       routerView.innerHTML = "";
-      routerView.appendChild(await render(component()));
+      routerView.appendChild(component);
     }
   };
 };
