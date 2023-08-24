@@ -85,7 +85,7 @@ export const createRouter = ({ routes }: { routes: any }) => {
     routerView = document.querySelector(".router-view");
     if (!isNull(routerView)) {
       routerView.innerHTML = "";
-      routerView.appendChild(await render(component));
+      routerView.appendChild(await render(component()));
     }
   };
 };
