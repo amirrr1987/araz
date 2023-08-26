@@ -1,5 +1,5 @@
 import { isArray, isNull } from "lodash-es";
-import { HTMLTags } from "./types";
+import { HTMLTags, Route, VNode } from "./types";
 import { el } from "./element";
 import { render } from "./render";
 
@@ -8,23 +8,58 @@ interface Props {
   name: string;
 }
 
-export const RouterLink = (props: Props) => {
-  const active = props.link === window.location.pathname;
+/**
+ * Creates a clickable link for router navigation, with active state management.
+ * 
+
+ * 
+ * @param link - The target route link for navigation.
+ * @param name - The display text of the link.
+ * @returns The virtual DOM element (VNode) representing the router link.
+ * 
+ * @example
+ *```
+ * const linkProps = {
+ *   link: '/home',
+ *   name: 'Home',
+ * };
+ * const routerLink = RouterLink(linkProps);
+ * // Render the router link in your component's template.
+ *```
+ */
+export const RouterLink = ({ name, link }: Props): VNode => {
+  const active = link === window.location.pathname;
 
   return el({
     $tag: "a",
     $attrs: {
-      href: `${props.link}`,
+      href: `${link}`,
       class: `${active ? ["active"] : ""}`,
       ["data-link"]: "",
     },
-    $children: [props.name],
+    $children: [name],
   });
 };
 
-export const RouterView = (props: HTMLTags) => {
+/**
+ * Renders a router view element for displaying the content of the active route.
+ *
+ * @param  $tag - The HTML tag name for rendering the router view. Defaults to "div" if not provided.
+ * @returns  The virtual DOM element (VNode) representing the router view.
+ *
+ *
+ * @example
+ * ```
+ * // Render the router view in your component's template.
+ * const routerView = RouterView("section");
+ * // or
+ * const defaultRouterView = RouterView();
+ * // ...
+ * ```
+ */
+export const RouterView = ($tag: HTMLTags): VNode => {
   return el({
-    $tag: props ?? "div",
+    $tag: $tag ?? "div",
     $attrs: {
       class: "router-view",
     },
@@ -32,7 +67,25 @@ export const RouterView = (props: HTMLTags) => {
 };
 let routerView: any = null;
 
-export const createRouter = ({ routes }: { routes: any }) => {
+/**
+ * Creates a basic router implementation for handling navigation and rendering components based on routes.
+ *
+ * @param routes - An array of route configurations.
+ *
+ * @example
+ * ```
+ * // Define route configurations
+ * const routes = [
+ *   { path: '/', component: Home },
+ *   { path: '/about', component: About },
+ *   // ...
+ * ];
+ * // Create the router instance
+ * const router = createRouter({ routes });
+ * // ...
+ * ```
+ */
+export const createRouter = ({ routes }: { routes: Route[] }) => {
   const navigateTo = (url: any) => {
     history.pushState(null, "/", url);
     router();

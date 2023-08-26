@@ -12,8 +12,8 @@ export type HTMLTags = 'a' | 'abbr' | 'address' | 'area' | 'article' | 'aside' |
     'tr' | 'track' | 'u' | 'ul' | 'var' | 'video' | 'wbr';
 
 export interface Mount {
-    $node: DocumentFragment | HTMLElement,
-    $target: HTMLElement
+  $node: HTMLElement;
+  $target: HTMLElement;
 }
 
 interface Attrs {
@@ -27,4 +27,11 @@ export interface VNode {
     $tag: HTMLTags;
     $attrs?: Attrs;
     $children?: any;
+}
+
+
+export interface Route {
+  path: string;
+  component: VNode;
+  name: string;
 }
