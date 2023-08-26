@@ -1,6 +1,5 @@
  # Araz.js
 
----
 
 Araz.js is a mini framework that provides a simple and intuitive API for building web applications. It is inspired by popular frameworks like React and Vue.js, but with a focus on simplicity and ease of use.
 
