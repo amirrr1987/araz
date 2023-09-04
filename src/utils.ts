@@ -21,7 +21,6 @@ export const ref = <T>(value: T): Ref<T> => {
     ): boolean {
       if (key === "value") {
         target[key] = value;
-        console.log("Value changed:", value);
         return true;
       }
       return false;
@@ -35,25 +34,26 @@ type ReactiveObject<T> = {
   [K in keyof T]: Ref<T[K]>;
 };
 
-export const reactive = <T>(obj: T): ReactiveObject<T> => {
+export const reactive = <T extends Record<string, any>>(
+  obj: T
+): ReactiveObject<T> => {
   const reactiveObject = {} as ReactiveObject<T>;
 
   for (const key in obj) {
-    if (obj[key]) {
-      reactiveObject[key] = ref(obj[key]);
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      reactiveObject[key as keyof T] = ref(obj[key]);
     }
   }
 
   const proxy: ProxyHandler<ReactiveObject<T>> = {
     get(target, key) {
       if (key in target) {
-        return target[key].value;
+        return target[key as keyof T].value;
       }
     },
     set(target, key, value) {
       if (key in target) {
-        target[key].value = value;
-        console.log(`Value changed for ${String(key)}:`, value);
+        target[key as keyof T].value = value;
         return true;
       }
       return false;
