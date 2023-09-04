@@ -35,3 +35,13 @@ export interface Route {
   component: VNode;
   name: string;
 }
+export type Ref<T> = {
+  value: T;
+};
+export type ReactiveObject<T> = {
+  [key: string]: T;
+};
+
+export type ReactiveProxy<T> = {
+  [K in keyof T]: T[K];
+};
