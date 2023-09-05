@@ -11,7 +11,7 @@ import {
   map,
   trim,
 } from "lodash-es";
-import { VNode } from "./types";
+import { Children, VNode } from "./types";
 
 /**
  * Renders a virtual DOM structure into actual DOM elements and returns a DocumentFragment or HTMLElement.
@@ -41,62 +41,66 @@ import { VNode } from "./types";
  * ```
  */
 export const render = async (
-  nodes: VNode[] | VNode
+  nodes: Children
 ): Promise<DocumentFragment | HTMLElement> => {
   const fragment = document.createDocumentFragment();
 
   const nodeArray = isArray(nodes) ? nodes : [nodes];
 
   for (const node of nodeArray) {
-    const { $tag, $attrs = {}, $children = [] } = node;
+    if (isString(node)) {
+      fragment.appendChild(document.createTextNode(node));
+    } else {
+      const { $tag, $attrs = {}, $children = [] } = node;
 
-    if (!$tag) {
-      continue;
-    }
+      if (!$tag) {
+        continue;
+      }
 
-    const $el = document.createElement($tag);
+      const $el = document.createElement($tag);
 
-    for (const [key, value] of entries($attrs)) {
-      if (isEqual(key, "style") && isObject(value)) {
-        const result = map(
-          entries(value),
-          ([property, propertyValue]) =>
-            `${kebabCase(property)}:${propertyValue}`
-        );
-        const styleString = join(result, "; ");
-        $el.setAttribute("style", styleString);
-      } else if (isEqual(key, "class") && isArray(value)) {
-        const classList = value.join(" ");
-        $el.setAttribute("class", trim(classList));
-      } else if (isEqual(key, "events") && isObject(value)) {
-        for (const [eventName, eventHandler] of entries(value)) {
-          const formattedEventName = camelCase(eventName.slice(2));
-          if (isFunction(eventHandler)) {
-            $el.addEventListener(
-              formattedEventName,
-              eventHandler as unknown as EventListener
-            );
+      for (const [key, value] of entries($attrs)) {
+        if (isEqual(key, "style") && isObject(value)) {
+          const result = map(
+            entries(value),
+            ([property, propertyValue]) =>
+              `${kebabCase(property)}:${propertyValue}`
+          );
+          const styleString = join(result, "; ");
+          $el.setAttribute("style", styleString);
+        } else if (isEqual(key, "class") && isArray(value)) {
+          const classList = value.join(" ");
+          $el.setAttribute("class", trim(classList));
+        } else if (isEqual(key, "events") && isObject(value)) {
+          for (const [eventName, eventHandler] of entries(value)) {
+            const formattedEventName = camelCase(eventName.slice(2));
+            if (isFunction(eventHandler)) {
+              $el.addEventListener(
+                formattedEventName,
+                eventHandler as unknown as EventListener
+              );
+            }
+          }
+        } else {
+          $el.setAttribute(key, isString(value) ? value.toString() : "");
+        }
+      }
+
+      if (isString($children)) {
+        $el.appendChild(document.createTextNode($children));
+      } else if (Array.isArray($children)) {
+        for (const child of $children) {
+          if (isString(child)) {
+            $el.appendChild(document.createTextNode(child));
+          } else {
+            const $child = await render(child);
+            $el.appendChild($child);
           }
         }
-      } else {
-        $el.setAttribute(key, isString(value) ? value.toString() : "");
       }
-    }
 
-    if (isString($children)) {
-      $el.appendChild(document.createTextNode($children));
-    } else if (Array.isArray($children)) {
-      for (const child of $children) {
-        if (isString(child)) {
-          $el.appendChild(document.createTextNode(child));
-        } else {
-          const $child = await render(child);
-          $el.appendChild($child);
-        }
-      }
+      fragment.appendChild($el);
     }
-
-    fragment.appendChild($el);
   }
 
   return fragment;
