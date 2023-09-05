@@ -1,4 +1,4 @@
-import { ReactiveObject, ReactiveProxy, Ref } from "./types";
+import { ReactiveObject, Reactive, Ref } from "./types";
 
 export const ref = <T>(value: T): Ref<T> => {
   const obj: { value: T } = {
@@ -18,9 +18,7 @@ export const ref = <T>(value: T): Ref<T> => {
   return proxy as Ref<T>;
 };
 
-export const reactive = <T extends ReactiveObject<any>>(
-  obj: T
-): ReactiveProxy<T> => {
+export const reactive = <T extends ReactiveObject<any>>(obj: T): Reactive<T> => {
   const proxy = new Proxy(obj, {
     get(target, key) {
       return target[key as keyof T];
@@ -31,5 +29,5 @@ export const reactive = <T extends ReactiveObject<any>>(
     },
   });
 
-  return proxy as ReactiveProxy<T>;
+  return proxy as Reactive<T>;
 };
