@@ -15,7 +15,10 @@ import { Mount } from "./types";
  * mount({ $node: elementToMount, $target: targetElement });
  *```
  */
-export const mount = ({ $node, $target }: Mount): HTMLElement => {
+export const mount = ({
+  $node,
+  $target,
+}: Mount): DocumentFragment | HTMLElement => {
   $target.append($node);
   return $node;
 };

@@ -1,7 +1,8 @@
 export interface Mount {
-  $node: HTMLElement;
+  $node: HTMLElement | DocumentFragment;
   $target: HTMLElement;
 }
+
 export interface Attrs {
   style?: Partial<CSSStyleDeclaration> | string;
   class?: string | string[];
@@ -20,8 +21,9 @@ export type Children = VNode | string | VNode[] | string[];
 export interface VNode {
   $tag: HTMLTags;
   $attrs?: Attrs;
-  $children?: any;
+  $children?: (VNode | string)[];
 }
+
 export interface Route {
   path: string;
   component: VNode;
@@ -33,6 +35,7 @@ export type Ref<T> = {
 export type ReactiveObject<T> = {
   [key: string]: T;
 };
+
 export type Reactive<T> = {
   [K in keyof T]: T[K];
 };

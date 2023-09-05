@@ -47,7 +47,7 @@ export const render = async (
 
   const nodeArray = isArray(nodes) ? nodes : [nodes];
 
-  for await (const node of nodeArray) {
+  for (const node of nodeArray) {
     const { $tag, $attrs = {}, $children = [] } = node;
 
     if (!$tag) {
@@ -56,7 +56,7 @@ export const render = async (
 
     const $el = document.createElement($tag);
 
-    for await (const [key, value] of entries($attrs)) {
+    for (const [key, value] of entries($attrs)) {
       if (isEqual(key, "style") && isObject(value)) {
         const result = map(
           entries(value),
@@ -83,12 +83,16 @@ export const render = async (
       }
     }
 
-    for await (const child of $children) {
-      if (isString(child)) {
-        $el.appendChild(document.createTextNode(child));
-      } else {
-        const $child = await render(child);
-        $el.appendChild($child);
+    if (isString($children)) {
+      $el.appendChild(document.createTextNode($children));
+    } else if (Array.isArray($children)) {
+      for (const child of $children) {
+        if (isString(child)) {
+          $el.appendChild(document.createTextNode(child));
+        } else {
+          const $child = await render(child);
+          $el.appendChild($child);
+        }
       }
     }
 
