@@ -1,17 +1,6 @@
-import { reactive, ref } from "./src/utils";
-import { el, fragment } from "./src/element";
-import { mount } from "./src/mount";
-import { render } from "./src/render";
-import { RouterView, RouterLink, createRouter } from "./src/router";
-import type * from './src/'
-export {
-  el,
-  fragment,
-  mount,
-  render,
-  RouterLink,
-  RouterView,
-  createRouter,
-  reactive,
-  ref,
-};
+export * from "./src/utils";
+export * from "./src/element";
+export * from "./src/mount";
+export * from "./src/render";
+export * from "./src/router";
+export * from "./src/types";
