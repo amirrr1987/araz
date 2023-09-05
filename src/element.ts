@@ -1,14 +1,14 @@
-import { VNode } from "./types";
-export const fragment = ({ $children }) => $children;
+import { VNode, Children } from "./types";
+export const fragment = ({ $children }: { $children: Children }) => $children;
 
 /**
  * Creates a virtual DOM element (VNode) with the provided tag, attributes, and children.
- * 
+ *
  * @param $tag - The HTML tag name of the element.
  * @param $attrs - The attributes to apply to the element.
  * @param $children - An array of child VNodes.
  * @returns The created virtual DOM element (VNode).
- * 
+ *
  * @example
  *```
  * const element = el({
@@ -21,10 +21,10 @@ export const fragment = ({ $children }) => $children;
  * });
  *```
  */
-export const el = ({$tag, $attrs = {}, $children = []}  : VNode  ) => {
-    return {
-        $tag,
-        $attrs,
-        $children,
-    };
-  }
+export const el = ({ $tag, $attrs = {}, $children = [] }: VNode) => {
+  return {
+    $tag,
+    $attrs,
+    $children,
+  };
+};
