@@ -20,7 +20,7 @@ export type Children = VNode | string | VNode[] | string[];
 export interface VNode {
   $tag: HTMLTags;
   $attrs?: Attrs;
-  $children?: Children;
+  $children?: any;
 }
 export interface Route {
   path: string;
