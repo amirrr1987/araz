@@ -1,6 +1,6 @@
 export interface Mount {
-  $node: HTMLElement | DocumentFragment;
-  $target: HTMLElement;
+  $node: Element;
+  $target: HTMLDivElement;
 }
 
 export interface Attrs {

@@ -24,14 +24,14 @@ To create a component, you can use the `el()` function. This function takes an o
 For example, the following code creates a simple button component:
 
 ```
-const button = el({
-  $tag: 'button',
-  $attrs: {
+const button = el(
+ 'button',
+   {
     type: 'button',
     class: 'btn btn-primary',
   },
-  $children: ['Click me'],
-});
+  'Click me',
+);
 ```
 
 Once you have created a component, you can mount it to the DOM using the `mount()` function. This function takes two arguments: the component to be mounted, and the target element in the DOM.
@@ -45,21 +45,6 @@ mount({
 });
 ```
 
-## Rendering
-
-Araz.js uses a virtual DOM to render components. This means that it creates a lightweight representation of the DOM in memory, and then compares it to the actual DOM. If there are any differences, Araz.js will update the actual DOM to match the virtual DOM.
-
-This approach makes Araz.js very efficient, as it only updates the parts of the DOM that need to be updated.
-
-To render a component, you can use the `render()` function. This function takes a single argument: the component to be rendered.
-
-For example, the following code renders the button component:
-
-```
-const renderedButton = await render(button);
-```
-
-## Routing
 
 Araz.js includes a simple router that allows
 
