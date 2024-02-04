@@ -1,4 +1,4 @@
-// export * from "./src/utils";
+export * from "./src/utils";
 export * from "./src/element";
 export * from "./src/mount";
 // export * from "./src/render";
