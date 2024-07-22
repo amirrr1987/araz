@@ -17,7 +17,7 @@ import {
 /**
  * Create an HTML element.
  *
- * @param {string} $tag - The HTML tag name or tag type.
+ * @param {string} $tag - The HTML tag name.
  * @param {Attrs} [$attrs] - Optional attributes for the element.
  * @param {Children} [$children] - Optional children of the element.
  * @returns {Element} The created HTML element.
